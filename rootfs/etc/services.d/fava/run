@@ -1,5 +1,7 @@
-#!/usr/bin/execline -P
+#!/usr/bin/execlineb -P
 # load container environment.
 with-contenv
-s6-envdir /env/
-exec s6-setuidgid abc /app/bin/fava
+#s6-envdir /env/
+#s6-setuidgid abc /app/bin/fava
+fdmove -c 2 1
+/app/bin/fava

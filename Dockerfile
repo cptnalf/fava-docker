@@ -53,6 +53,7 @@ RUN \
   pip install -f -U git+https://github.com/polarmutex/fava-envelope.git@master \
   && pip install -f -U git+https://github.com/redstreet/fava_investor.git@master
 
+RUN pip3 cache purge
 RUN pip3 uninstall -y pip
 
 RUN find /app -name __pycache__ -exec rm -rf -v {} +
@@ -71,6 +72,7 @@ FROM gcr.io/distroless/python3-debian11
 COPY --from=build_env /app /app
 
 COPY --from=build_env /s6 /
+COPY rootfs/ /
 
 # Default fava port number
 EXPOSE 5000

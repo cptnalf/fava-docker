@@ -1,5 +1,7 @@
-#!/usr/bin/execline -P
+#!/usr/bin/execlineb -P
 # load container environment.
 with-contenv
 s6-envdir /env/
-exec s6-setuidgid abc python /bean-import/import.py -a 0.0.0.0
+#exec s6-setuidgid abc python /bean-import/import.py -a 0.0.0.0
+fdmove -c 2 1
+python3 /bean-import/import.py -a 0.0.0.0
