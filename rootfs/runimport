@@ -1,0 +1,6 @@
+#!/usr/bin/execlineb -P
+# load container environment.
+/command/with-contenv
+/command/s6-envdir /env/
+/command/fdmove -c 2 1
+/command/s6-applyuidgid -U -z python3 /bean-import/import.py -a 0.0.0.0

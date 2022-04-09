@@ -4,4 +4,4 @@ with-contenv
 #s6-envdir /env/
 #s6-setuidgid abc /app/bin/fava
 fdmove -c 2 1
-/app/bin/fava
+s6-applyuidgid -U -z /app/bin/fava

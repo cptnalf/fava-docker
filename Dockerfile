@@ -79,7 +79,9 @@ EXPOSE 5000
 EXPOSE 8101
 
 ENV BEANCOUNT_FILE ""
-
+ENV UID 0
+ENV GID 0
+ENV GIDLIST 0 
 # Required by Click library.
 # See https://click.palletsprojects.com/en/7.x/python3/
 ENV LC_ALL "C.UTF-8"

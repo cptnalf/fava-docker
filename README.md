@@ -18,5 +18,7 @@ docker run \
   -v $PWD:/bean \
   -v ${PWD}/../bean-import:/bean-import \
   -e BEANCOUNT_FILE=/bean/example.bean \
+  -e UID=$(id -u) -e GID=$(id -g) -e GIDLIST=i$(id -g) \
  cptnalf/fava:1.21
 ```
+
