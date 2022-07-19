@@ -2,22 +2,12 @@ ARG BEANCOUNT_VERSION=2.3.5
 ARG NODE_BUILD_IMAGE=16-bullseye
 ARG ARCH=x86_64
 ARG SOURCE_BRANCH
-
-FROM node:${NODE_BUILD_IMAGE} as node_build_env
-ARG SOURCE_BRANCH
-ENV FAVA_VERSION=${SOURCE_BRANCH:-v1.21}
-
-RUN apt-get update && apt-get install -y python3-babel python3-pip && python3 -m pip install -U Babel
-
-WORKDIR /tmp/build
-RUN git clone https://github.com/beancount/fava
-
-WORKDIR /tmp/build/fava
-RUN git checkout ${FAVA_VERSION} && make && make mostlyclean
+ARG FAVA_VERSION=${SOURCE_BRANCH:-1.22.1}
 
 FROM debian:bullseye as build_env
 ARG BEANCOUNT_VERSION
 ARG ARCH
+ARG FAVA_VERSION
 
 RUN apt-get update
 RUN apt-get install -y build-essential libxml2-dev libxslt-dev curl git \
@@ -26,32 +16,21 @@ RUN apt-get install -y build-essential libxml2-dev libxslt-dev curl git \
         python3-pip \
         python3-venv
 
-
 ENV PATH "/app/bin:$PATH"
 RUN python3 -mvenv /app
 RUN pip3 install -U pip setuptools argh
 # argh required for fava_investor installed after fava.
 
-COPY --from=node_build_env /tmp/build/fava /tmp/build/fava
-
-WORKDIR /tmp/build
-RUN git clone https://github.com/beancount/beancount
-
-WORKDIR /tmp/build/beancount
-RUN git checkout ${BEANCOUNT_VERSION}
-
-RUN CFLAGS=-s pip3 install -U /tmp/build/beancount
+RUN python3 -m pip install beancount==${BEANCOUNT_VERSION} \
+  && python3 -m pip install fava==${FAVA_VERSION}
 
 # these things require beancount.
-RUN pip install beancount-import \
-    && pip install beancount_portfolio_allocation \
-    && pip install git+https://github.com/beancount/beanprice.git 
-
-RUN pip3 install -U /tmp/build/fava
+RUN python3 -m pip install beancount-import \
+    && python3 -m pip install beancount_portfolio_allocation \
+    && python3 -m pip install https://github.com/beancount/beanprice/archive/master.tar.gz
 
 RUN \
-  pip install -f -U git+https://github.com/polarmutex/fava-envelope.git@master \
-  && pip install -f -U git+https://github.com/redstreet/fava_investor.git@master
+  python3 -m pip install fava-envelope==0.5.4 fava_investor==0.2.7
 
 RUN pip3 cache purge
 RUN pip3 uninstall -y pip
@@ -90,3 +69,4 @@ ENV FAVA_HOST "0.0.0.0"
 ENV PATH "/app/bin:$PATH"
 
 ENTRYPOINT ["/init"]
+CMD ["/runfava" ]
