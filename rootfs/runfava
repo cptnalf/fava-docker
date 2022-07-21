@@ -2,6 +2,6 @@
 # load container environment.
 with-contenv
 #s6-envdir /env/
-#s6-setuidgid abc /app/bin/fava
 fdmove -c 2 1
-s6-applyuidgid -U -z /app/bin/fava
+s6-applyuidgid -U -z s6-env
+/app/bin/fava

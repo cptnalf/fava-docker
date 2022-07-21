@@ -66,7 +66,7 @@ ENV GIDLIST 0
 ENV LC_ALL "C.UTF-8"
 ENV LANG "C.UTF-8"
 ENV FAVA_HOST "0.0.0.0"
-ENV PATH "/app/bin:$PATH"
+ENV PATH "/app/bin:/command:/usr/bin:/bin:$PATH"
 
 ENTRYPOINT ["/init"]
 CMD ["/runfava" ]
